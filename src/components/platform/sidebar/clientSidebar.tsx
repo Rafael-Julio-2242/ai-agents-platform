@@ -1,6 +1,6 @@
 "use client";
 
-import { Bell, Bot, User } from "lucide-react";
+import { Bell, Bot, KeyRound, Sparkles, User } from "lucide-react";
 import {
   SidebarData,
   SidebarFooterData,
@@ -59,7 +59,7 @@ export default function ClientSidebar({
   };
 
   const agentSection: SidebarSectionData = {
-    title: "Agents",
+   title: "Agents",
   };
 
   const manageAgentsGroup: SidebarNavGroupData = { 
@@ -89,10 +89,32 @@ export default function ClientSidebar({
     isActive: false,
   };
 
+  const platformSection: SidebarSectionData = {
+   title: "Platform",
+  }
+
+  const manageCredentials: SidebarNavGroupData = {
+   title: "Credentials",
+   url: "#",
+   icon: <KeyRound />,
+   items: [
+    {
+     title: "View Credentials",
+     url: "#",
+    },
+    {
+     title: "New Credential",
+     url: "#",
+    }
+   ],
+   isActive: false,
+  }
+
+
   const sidebarData: SidebarData = {
     header: sidebarHeaderData,
     footer: sidebarFooterData,
-    content: [agentSection, manageAgentsGroup],
+    content: [agentSection, manageAgentsGroup, platformSection, manageCredentials],
   };
 
   return (

@@ -84,10 +84,8 @@ export default function AppSidebar({
     isSubItem: boolean = false
   ): React.ReactNode {
     if (validateSidebarType(item, "section")) {
-      // Formata e retorna seção
-
       return (
-        <SidebarGroupLabel key={`${item.title}_${index}`}>
+        <SidebarGroupLabel key={`${item.title}_${index}`} className="list-none">
           {item.icon !== undefined && (item.icon as React.ReactNode)}
           {item.title}
         </SidebarGroupLabel>
@@ -95,7 +93,6 @@ export default function AppSidebar({
     }
 
     if (validateSidebarType(item, "group")) {
-      // Formata e retorna grupo
       const groupItem = item as SidebarNavGroupData;
       return (
         <Collapsible
@@ -126,16 +123,19 @@ export default function AppSidebar({
     }
 
     if (validateSidebarType(item, "item")) {
-      // Formata e retorna item
       const navItem = item as SidebarNavItemData;
 
       if (isSubItem) {
         return (
           <SidebarMenuSubItem key={`${navItem.title}_${index}`}>
-            <SidebarMenuSubButton asChild>
-              <Link href={navItem.url}>
+            <SidebarMenuSubButton asChild onClick={navItem.onClick}>
+              {navItem.url ? (
+                <Link href={navItem.url}>
+                  <span>{navItem.title}</span>
+                </Link>
+              ) : (
                 <span>{navItem.title}</span>
-              </Link>
+              )}
             </SidebarMenuSubButton>
             {navItem.menuButtons !== undefined &&
               navItem.menuButtons.length > 0 && (
@@ -190,11 +190,16 @@ export default function AppSidebar({
 
       return (
         <SidebarMenuItem key={`${navItem.title}_${index}`}>
-          <SidebarMenuButton asChild>
-            <Link href={navItem.url}>
-              {navItem.icon !== undefined && (navItem.icon as React.ReactNode)}
+          <SidebarMenuButton asChild onClick={navItem.onClick}>
+            {navItem.url ? (
+              <Link href={navItem.url}>
+                {navItem.icon !== undefined &&
+                  (navItem.icon as React.ReactNode)}
+                <span>{navItem.title}</span>
+              </Link>
+            ) : (
               <span>{navItem.title}</span>
-            </Link>
+            )}
           </SidebarMenuButton>
           {navItem.menuButtons !== undefined &&
             navItem.menuButtons.length > 0 && (
@@ -325,7 +330,7 @@ export default function AppSidebar({
             </SidebarMenu>
           )}
         </SidebarHeader>
-        <SidebarContent>
+        <SidebarContent className="px-2 list-none">
           {content.map((item, index) => renderSidebarContentItem(item, index))}
         </SidebarContent>
         {footer && (
@@ -388,23 +393,25 @@ export default function AppSidebar({
                     </DropdownMenuLabel>
                     <DropdownMenuSeparator />
 
-                    {footer.menuButtons && footer.menuButtons.length > 0 && (
+                    {footer.menuButtons &&
+                      footer.menuButtons.length > 0 &&
                       footer.menuButtons.map((menuButton, menuIndex) => (
                         <DropdownMenuGroup
                           key={`${menuButton.title}_group_${menuIndex}`}
                         >
-                          {menuButton.hasSeparatorUpper && <DropdownMenuSeparator />}
-                          <DropdownMenuItem
-                            onClick={menuButton.onClick}
-                          >
+                          {menuButton.hasSeparatorUpper && (
+                            <DropdownMenuSeparator />
+                          )}
+                          <DropdownMenuItem onClick={menuButton.onClick}>
                             {menuButton.icon !== undefined &&
                               (menuButton.icon as React.ReactNode)}
                             {menuButton.title}
                           </DropdownMenuItem>
-                          {menuButton.hasSeparatorLower && <DropdownMenuSeparator />}
+                          {menuButton.hasSeparatorLower && (
+                            <DropdownMenuSeparator />
+                          )}
                         </DropdownMenuGroup>
-                      ))
-                    )}
+                      ))}
                   </DropdownMenuContent>
                 </DropdownMenu>
               </SidebarMenuItem>

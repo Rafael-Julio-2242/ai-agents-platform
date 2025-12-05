@@ -1,4 +1,3 @@
-import "./globals.css";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { ThemeTogglerButton } from "@/components/animate-ui/components/buttons/theme-toggler";
@@ -18,11 +17,9 @@ export const metadata: Metadata = {
   title: "AI Agent Platform",
   description: "A platform to create and manage AI agents.",
   applicationName: "AI Agent Platform",
-  authors: [{ name: "Rafal Julio", url: "" } ],
-
 };
 
-export default function RootLayout({
+export default function Layout({
   children,
 }: Readonly<{
   children: React.ReactNode;
@@ -32,7 +29,10 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {children}
+        <ClientSidebar>
+          <ThemeTogglerButton className='absolute top-2 right-4 hover:cursor-pointer'  />
+          {children}
+        </ClientSidebar>
       </body>
     </html>
   );

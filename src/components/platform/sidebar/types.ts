@@ -8,8 +8,9 @@ export type SidebarTeam = {
 
 export interface SidebarNavItemData {
   title: string;
-  url: string;
+  url?: string;
   icon?: LucideIcon | React.ReactNode;
+  onClick?: () => void;
   menuButtons?: {
     title: string;
     icon?: React.ReactNode;
