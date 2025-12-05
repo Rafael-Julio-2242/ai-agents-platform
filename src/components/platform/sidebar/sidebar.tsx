@@ -4,15 +4,20 @@ import { cn } from "@/lib/utils";
 import {
   Sidebar,
   SidebarContent,
+  SidebarGroupLabel,
   SidebarHeader,
   SidebarInset,
   SidebarMenu,
+  SidebarMenuAction,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarMenuSub,
+  SidebarMenuSubButton,
+  SidebarMenuSubItem,
   SidebarProvider,
   SidebarTrigger,
 } from "../../animate-ui/components/radix/sidebar";
-import { useState } from "react";
+import React, { useState } from "react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -21,10 +26,27 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "../../animate-ui/components/radix/dropdown-menu";
-import type { LucideIcon } from "lucide-react";
-import { ChevronsUpDown, Plus } from "lucide-react";
+import {
+  ChevronRight,
+  ChevronsUpDown,
+  MoreHorizontal,
+  Plus,
+} from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { SidebarData, SidebarNavGroupData, SidebarNavItemData, SidebarSectionData, SidebarTeam, validateSidebarType } from "./types";
+import {
+  SidebarData,
+  SidebarNavGroupData,
+  SidebarNavItemData,
+  SidebarSectionData,
+  SidebarTeam,
+  validateSidebarType,
+} from "./types";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/animate-ui/primitives/radix/collapsible";
+import Link from "next/link";
 
 export interface SidebarProps {
   sidebarData: SidebarData;
@@ -48,21 +70,176 @@ export default function AppSidebar({
     );
   }
 
-  function renderSidebarContentItem(item: SidebarNavItemData | SidebarNavGroupData | SidebarSectionData, index: number): React.ReactNode {
+  function renderSidebarContentItem(
+    item: SidebarNavItemData | SidebarNavGroupData | SidebarSectionData,
+    index: number,
+    isSubItem: boolean = false
+  ): React.ReactNode {
+    if (validateSidebarType(item, "section")) {
+      // Formata e retorna seção
 
-    if (validateSidebarType(item, "section")) { // Formata e retorna seção
-
+      return (
+        <SidebarGroupLabel key={`${item.title}_${index}`}>
+          {item.icon !== undefined && (item.icon as React.ReactNode)}
+          {item.title}
+        </SidebarGroupLabel>
+      );
     }
 
-    if (validateSidebarType(item, "group")) { // Formata e retorna grupo
-
+    if (validateSidebarType(item, "group")) {
+      // Formata e retorna grupo
+      const groupItem = item as SidebarNavGroupData;
+      return (
+        <Collapsible
+          key={`${groupItem.title}_${index}`}
+          asChild
+          defaultOpen={groupItem.isActive}
+          className="group/collapsible"
+        >
+          <SidebarMenuItem>
+            <CollapsibleTrigger asChild>
+              <SidebarMenuButton tooltip={groupItem.title}>
+                {groupItem.icon !== undefined &&
+                  (groupItem.icon as React.ReactNode)}
+                {groupItem.title}
+                <ChevronRight className="ml-auto transition-transform duration-300 group-data-[state=open]/collapsible:rotate-90" />
+              </SidebarMenuButton>
+            </CollapsibleTrigger>
+            <CollapsibleContent>
+              <SidebarMenuSub>
+                {groupItem.items.map((subItem, subIndex) =>
+                  renderSidebarContentItem(subItem, subIndex)
+                )}
+              </SidebarMenuSub>
+            </CollapsibleContent>
+          </SidebarMenuItem>
+        </Collapsible>
+      );
     }
 
-    if (validateSidebarType(item, "item")) { // Formata e retorna item
+    if (validateSidebarType(item, "item")) {
+      // Formata e retorna item
+      const navItem = item as SidebarNavItemData;
 
+      if (isSubItem) {
+        return (
+          <SidebarMenuSubItem key={`${navItem.title}_${index}`}>
+            <SidebarMenuSubButton asChild>
+              <Link href={navItem.url}>
+                <span>{navItem.title}</span>
+              </Link>
+            </SidebarMenuSubButton>
+            {navItem.menuButtons !== undefined &&
+              navItem.menuButtons.length > 0 && (
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <SidebarMenuAction showOnHover>
+                      <MoreHorizontal />
+                      <span className="sr-only">More</span>
+                    </SidebarMenuAction>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent
+                    className="w-48 rounded-lg"
+                    side={isMobile ? "bottom" : "right"}
+                    align={isMobile ? "end" : "start"}
+                  >
+                    {navItem.menuButtons!.map((menuButton, menuIndex) => {
+                      if (menuButton.hasSeparator) {
+                        return (
+                          <React.Fragment
+                            key={`${menuButton.title}_separator_${menuIndex}`}
+                          >
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem
+                              key={`${menuButton.title}_${menuIndex}`}
+                              onClick={menuButton.onClick}
+                            >
+                              {menuButton.icon !== undefined &&
+                                (menuButton.icon as React.ReactNode)}
+                              {menuButton.title}
+                            </DropdownMenuItem>
+                          </React.Fragment>
+                        );
+                      }
+
+                      return (
+                        <DropdownMenuItem
+                          key={`${menuButton.title}_${menuIndex}`}
+                          onClick={menuButton.onClick}
+                        >
+                          {menuButton.icon !== undefined &&
+                            (menuButton.icon as React.ReactNode)}
+                          {menuButton.title}
+                        </DropdownMenuItem>
+                      );
+                    })}
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              )}
+          </SidebarMenuSubItem>
+        );
+      }
+
+      return (
+        <SidebarMenuItem key={`${navItem.title}_${index}`}>
+          <SidebarMenuButton asChild>
+            <Link href={navItem.url}>
+              {navItem.icon !== undefined && (navItem.icon as React.ReactNode)}
+              <span>{navItem.title}</span>
+            </Link>
+          </SidebarMenuButton>
+          {navItem.menuButtons !== undefined &&
+            navItem.menuButtons.length > 0 && (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <SidebarMenuAction showOnHover>
+                    <MoreHorizontal />
+                    <span className="sr-only">More</span>
+                  </SidebarMenuAction>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent
+                  className="w-48 rounded-lg"
+                  side={isMobile ? "bottom" : "right"}
+                  align={isMobile ? "end" : "start"}
+                >
+                  {navItem.menuButtons!.map((menuButton, menuIndex) => {
+                    if (menuButton.hasSeparator) {
+                      return (
+                        <React.Fragment
+                          key={`${menuButton.title}_separator_${menuIndex}`}
+                        >
+                          <DropdownMenuSeparator />
+                          <DropdownMenuItem
+                            key={`${menuButton.title}_${menuIndex}`}
+                            onClick={menuButton.onClick}
+                          >
+                            {menuButton.icon !== undefined &&
+                              (menuButton.icon as React.ReactNode)}
+                            {menuButton.title}
+                          </DropdownMenuItem>
+                        </React.Fragment>
+                      );
+                    }
+
+                    return (
+                      <DropdownMenuItem
+                        key={`${menuButton.title}_${menuIndex}`}
+                        onClick={menuButton.onClick}
+                      >
+                        {menuButton.icon !== undefined &&
+                          (menuButton.icon as React.ReactNode)}
+                        {menuButton.title}
+                      </DropdownMenuItem>
+                    );
+                  })}
+                </DropdownMenuContent>
+              </DropdownMenu>
+            )}
+        </SidebarMenuItem>
+      );
     }
 
-    return <></>
+    return <></>;
   }
 
   return (
@@ -77,7 +254,8 @@ export default function AppSidebar({
               )}
             >
               <SidebarMenuItem>
-                {header.titleIcon as React.ReactNode}
+                {header.titleIcon !== undefined &&
+                  (header.titleIcon as React.ReactNode)}
                 {header.title}
               </SidebarMenuItem>
             </SidebarMenu>
@@ -140,10 +318,7 @@ export default function AppSidebar({
           )}
         </SidebarHeader>
         <SidebarContent>
-          {content.map((item, index) => (
-            renderSidebarContentItem(item, index)
-          ))}
-
+          {content.map((item, index) => renderSidebarContentItem(item, index))}
         </SidebarContent>
       </Sidebar>
       <SidebarInset>

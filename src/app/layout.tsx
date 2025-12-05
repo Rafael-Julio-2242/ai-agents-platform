@@ -2,8 +2,7 @@ import "./globals.css";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { ThemeTogglerButton } from "@/components/animate-ui/components/buttons/theme-toggler";
-import AppSidebar, { SidebarData, SidebarFooterData, SidebarHeaderData, SidebarNavGroupData, SidebarSectionData } from "@/components/platform/sidebar/sidebar";
-import { Bot } from "lucide-react";
+import ClientSidebar from "@/components/platform/sidebar/clientSidebar";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -23,52 +22,6 @@ export const metadata: Metadata = {
 
 };
 
-const sidebarHeaderData: SidebarHeaderData = {
-  teams: [
-    {
-      name: "Development",
-      isActive: true,
-    }
-  ]
-}
-
-const sidebarFooterData: SidebarFooterData = {
-  user: {
-    name: "Rafael Julio",
-    email: "rafael.julio@example.com"
-  }
-}
-
-const agentSection: SidebarSectionData = {
-  title: "Agents",
-}
-
-const manageAgentsGroup: SidebarNavGroupData = {
-  title: "Manage Agents",
-  url: "#",
-  icon: <Bot />,
-  items: [
-    {
-      title: "View Agents",
-      url: "#"
-    },
-    {
-      title: "Create Agent",
-      url: "#"
-    }
-  ],
-  isActive: false
-}
-
-const sidebarData: SidebarData = {
-  header: sidebarHeaderData,
-  footer: sidebarFooterData,
-  content: [
-    agentSection,
-    manageAgentsGroup
-  ],
-}
-
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -79,10 +32,10 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <AppSidebar sidebarData={sidebarData} >
+        <ClientSidebar>
           <ThemeTogglerButton className='absolute top-2 right-4 hover:cursor-pointer'  />
           {children}
-        </AppSidebar>
+        </ClientSidebar>
       </body>
     </html>
   );
