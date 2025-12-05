@@ -6,12 +6,6 @@ export type SidebarTeam = {
   avatar?: React.ReactNode;
 };
 
-// TODO Validar como eu vou passar uma "função tipada" do server side para o Client Side 
-export type SidebarFunctionStruct = {
-  parameters: Array<{ name: string; type: string; }>
-  returnType: string;
-}
-
 export interface SidebarNavItemData {
   title: string;
   url: string;
@@ -50,6 +44,13 @@ export interface SidebarFooterData {
     email: string;
     avatar_url?: string;
   };
+  menuButtons?: {
+    title: string;
+    icon?: LucideIcon | React.ReactNode;
+    onClick?: () => void;
+    hasSeparatorUpper?: boolean;
+    hasSeparatorLower?: boolean;
+  }[];
 }
 
 export interface SidebarData {

@@ -4,6 +4,7 @@ import { cn } from "@/lib/utils";
 import {
   Sidebar,
   SidebarContent,
+  SidebarFooter,
   SidebarGroupLabel,
   SidebarHeader,
   SidebarInset,
@@ -21,16 +22,22 @@ import React, { useState } from "react";
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "../../animate-ui/components/radix/dropdown-menu";
 import {
+  BadgeCheck,
+  Bell,
   ChevronRight,
   ChevronsUpDown,
+  CreditCard,
+  LogOut,
   MoreHorizontal,
   Plus,
+  Sparkles,
 } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import {
@@ -47,6 +54,7 @@ import {
   CollapsibleTrigger,
 } from "@/components/animate-ui/primitives/radix/collapsible";
 import Link from "next/link";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 export interface SidebarProps {
   sidebarData: SidebarData;
@@ -320,6 +328,89 @@ export default function AppSidebar({
         <SidebarContent>
           {content.map((item, index) => renderSidebarContentItem(item, index))}
         </SidebarContent>
+        {footer && (
+          <SidebarFooter>
+            <SidebarMenu>
+              <SidebarMenuItem>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <SidebarMenuButton
+                      size="lg"
+                      className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+                    >
+                      <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
+                        <Avatar>
+                          <AvatarImage
+                            src={footer.user.avatar_url}
+                            alt={footer.user.name}
+                          />
+                          <AvatarFallback>
+                            {footer.user.name.charAt(0)}
+                          </AvatarFallback>
+                        </Avatar>
+                        <div className="grid flex-1 text-left text-sm leading-tight">
+                          <span className="truncate font-semibold">
+                            {footer.user.name}
+                          </span>
+                          <span className="truncate text-xs">
+                            {footer.user.email}
+                          </span>
+                        </div>
+                      </div>
+                    </SidebarMenuButton>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent
+                    className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
+                    side={isMobile ? "bottom" : "right"}
+                    align="end"
+                    sideOffset={4}
+                  >
+                    <DropdownMenuLabel className="p-0 font-normal">
+                      <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
+                        <Avatar className="h-8 w-8 rounded-lg">
+                          <AvatarImage
+                            src={footer.user.avatar_url}
+                            alt={footer.user.name}
+                          />
+                          <AvatarFallback>
+                            {footer.user.name.charAt(0)}
+                          </AvatarFallback>
+                        </Avatar>
+                        <div className="grid flex-1 text-left text-sm leading-tight">
+                          <span className="truncate font-semibold">
+                            {footer.user.name}
+                          </span>
+                          <span className="truncate text-xs">
+                            {footer.user.email}
+                          </span>
+                        </div>
+                      </div>
+                    </DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+
+                    {footer.menuButtons && footer.menuButtons.length > 0 && (
+                      footer.menuButtons.map((menuButton, menuIndex) => (
+                        <DropdownMenuGroup
+                          key={`${menuButton.title}_group_${menuIndex}`}
+                        >
+                          {menuButton.hasSeparatorUpper && <DropdownMenuSeparator />}
+                          <DropdownMenuItem
+                            onClick={menuButton.onClick}
+                          >
+                            {menuButton.icon !== undefined &&
+                              (menuButton.icon as React.ReactNode)}
+                            {menuButton.title}
+                          </DropdownMenuItem>
+                          {menuButton.hasSeparatorLower && <DropdownMenuSeparator />}
+                        </DropdownMenuGroup>
+                      ))
+                    )}
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </SidebarMenuItem>
+            </SidebarMenu>
+          </SidebarFooter>
+        )}
       </Sidebar>
       <SidebarInset>
         <SidebarTrigger className="-ml-1" />

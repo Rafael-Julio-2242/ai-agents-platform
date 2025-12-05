@@ -1,6 +1,6 @@
 "use client";
 
-import { Bot } from "lucide-react";
+import { Bell, Bot, User } from "lucide-react";
 import {
   SidebarData,
   SidebarFooterData,
@@ -33,13 +33,36 @@ export default function ClientSidebar({
       name: "Rafael Julio",
       email: "rafael.julio@example.com",
     },
+    menuButtons: [
+      {
+        title: "Account",
+        icon: <User />,
+        onClick: () => {
+          alert("Account clicked");
+        },
+      },
+      {
+        title: "Notifications",
+        icon: <Bell />,
+        onClick: () => {
+          alert("Notifications clicked");
+        },
+      },
+      {
+        title: "Logout",
+        onClick: () => {
+          alert("Logout clicked");
+        },
+        hasSeparatorUpper: true,
+      },
+    ],
   };
 
   const agentSection: SidebarSectionData = {
     title: "Agents",
   };
 
-  const manageAgentsGroup: SidebarNavGroupData = {
+  const manageAgentsGroup: SidebarNavGroupData = { 
     title: "Manage Agents",
     url: "#",
     icon: <Bot />,
@@ -59,7 +82,7 @@ export default function ClientSidebar({
         ],
       },
       {
-        title: "Create Agent",
+        title: "New Agent",
         url: "#",
       },
     ],
