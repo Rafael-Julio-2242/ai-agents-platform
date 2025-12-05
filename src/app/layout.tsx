@@ -1,8 +1,8 @@
+import "./globals.css";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
 import { ThemeTogglerButton } from "@/components/animate-ui/components/buttons/theme-toggler";
-import AppSidebar, { SidebarData, SidebarFooterData, SidebarHeaderData, SidebarNavGroupData, SidebarSectionData } from "@/components/platform/sidebar";
+import AppSidebar, { SidebarData, SidebarFooterData, SidebarHeaderData, SidebarNavGroupData, SidebarSectionData } from "@/components/platform/sidebar/sidebar";
 import { Bot } from "lucide-react";
 
 const geistSans = Geist({
@@ -59,7 +59,6 @@ const manageAgentsGroup: SidebarNavGroupData = {
   ],
   isActive: false
 }
-
 
 const sidebarData: SidebarData = {
   header: sidebarHeaderData,

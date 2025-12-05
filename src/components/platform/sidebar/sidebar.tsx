@@ -11,7 +11,7 @@ import {
   SidebarMenuItem,
   SidebarProvider,
   SidebarTrigger,
-} from "../animate-ui/components/radix/sidebar";
+} from "../../animate-ui/components/radix/sidebar";
 import { useState } from "react";
 import {
   DropdownMenu,
@@ -20,62 +20,11 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "../animate-ui/components/radix/dropdown-menu";
+} from "../../animate-ui/components/radix/dropdown-menu";
 import type { LucideIcon } from "lucide-react";
 import { ChevronsUpDown, Plus } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
-
-type SidebarTeam = {
-  name: string;
-  isActive: boolean;
-  avatar?: React.ReactNode;
-};
-
-export interface SidebarNavItemData {
-  title: string;
-  url: string;
-  icon?: LucideIcon | React.ReactNode;
-  menuButtons?: {
-    title: string;
-    icon?: React.ReactNode;
-    onClick?: () => void;
-    hasSeparator?: boolean;
-  }[];
-}
-
-export interface SidebarNavGroupData {
-  title: string;
-  url: string;
-  isActive: boolean;
-  items: SidebarNavItemData[];
-  icon?: LucideIcon | React.ReactNode;
-}
-
-export interface SidebarSectionData {
-  title: string;
-  icon?: LucideIcon | React.ReactNode;
-}
-
-export interface SidebarHeaderData {
-  title?: string;
-  titleClassName?: string;
-  titleIcon?: LucideIcon | React.ReactNode;
-  teams?: SidebarTeam[];
-}
-
-export interface SidebarFooterData {
-  user: {
-    name: string;
-    email: string;
-    avatar_url?: string;
-  };
-}
-
-export interface SidebarData {
-  header: SidebarHeaderData;
-  footer: SidebarFooterData;
-  content: (SidebarSectionData | SidebarNavGroupData | SidebarNavItemData)[];
-}
+import { SidebarData, SidebarNavGroupData, SidebarNavItemData, SidebarSectionData, SidebarTeam, validateSidebarType } from "./types";
 
 export interface SidebarProps {
   sidebarData: SidebarData;
@@ -99,8 +48,21 @@ export default function AppSidebar({
     );
   }
 
-  function renderSidebarContentItem(item: SidebarNavItemData | SidebarNavGroupData | SidebarSectionData, index: number) {
+  function renderSidebarContentItem(item: SidebarNavItemData | SidebarNavGroupData | SidebarSectionData, index: number): React.ReactNode {
 
+    if (validateSidebarType(item, "section")) { // Formata e retorna seção
+
+    }
+
+    if (validateSidebarType(item, "group")) { // Formata e retorna grupo
+
+    }
+
+    if (validateSidebarType(item, "item")) { // Formata e retorna item
+
+    }
+
+    return <></>
   }
 
   return (
@@ -178,7 +140,9 @@ export default function AppSidebar({
           )}
         </SidebarHeader>
         <SidebarContent>
-          {}
+          {content.map((item, index) => (
+            renderSidebarContentItem(item, index)
+          ))}
 
         </SidebarContent>
       </Sidebar>
