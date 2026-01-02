@@ -25,15 +25,9 @@ export default function Layout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        <ClientSidebar>
-          <ThemeTogglerButton className='absolute top-2 right-4 hover:cursor-pointer'  />
-          {children}
-        </ClientSidebar>
-      </body>
-    </html>
+    <ClientSidebar>
+      <ThemeTogglerButton className="absolute top-2 right-4 hover:cursor-pointer" />
+      {children}
+    </ClientSidebar>
   );
 }
